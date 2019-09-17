@@ -3,6 +3,15 @@ scalar Date
 type Query{ 
     accounts: [Account!]!
     categories(operation: Operation): [ Category! ]!
+    records(
+      type: Operation,
+      accountsIds: [ ID!],
+      categoriesIds: [ ID! ],
+      """
+       Month and Year, format "MM-YYYY" e.g.: 06-2019
+      """
+      month: String
+    ):[Record!]!
     user(id: ID!): User
 }
 

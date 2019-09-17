@@ -1,4 +1,5 @@
 const { getUserId } = require('./../utils')
+const moment = require('moment');
 
 function accounts(_, args, ctx, info) {
     const userId = getUserId(ctx);
@@ -27,6 +28,38 @@ function categories(_, args, ctx, info) {
     }, info)
 }
 
+function records(_, args, ctx, info) {
+    const userId = getUserId(ctx);
+    const { type, accountsIds, categoriesIds, month } = args;
+
+    let AND = [{ user: { id: userId } }];
+
+    AND = !type ? AND : [...AND, { type }];
+
+    AND = !accountsIds || accountsIds.length === 0 ? AND : [
+        ...AND,
+        { OR: accountsIds.map(id => ({ account: { id } })) }
+    ];
+
+    AND = !categoriesIds || categoriesIds.length === 0 ? AND : [
+        ...AND,
+        { OR: categoriesIds.map(id => ({ category: { id } })) }
+    ];
+
+    if (month) {
+        const date = moment(month, 'MM-YYYY');
+        const startDate = date.startOf('month').toISOString();
+        const endDate = date.endOf('month').toISOString();
+
+        AND = [...AND, { date_gte: startDate }, { date_lte: endDate, }];
+    }
+
+    return ctx.db.query.records({
+        where: { AND },
+        orderBy: 'date_ASC'
+    }, info)
+}
+
 function user(_, args, ctx, info) {
     const userId = getUserId(ctx);
 
@@ -36,6 +69,7 @@ function user(_, args, ctx, info) {
 module.exports = {
     user,
     accounts,
-    categories
+    categories,
+    records
 }
 
