@@ -26,6 +26,26 @@ function createCategory(_, args, ctx, info) {
     }, info)
 }
 
+function createRecord(_, args, ctx, info) {
+    const userId = getUserId(ctx);
+    console.clear();
+    console.log("ARGS: ", args);
+    return ctx.db.mutation.createRecord({
+        data: {
+            user: { connect: { id: userId } },
+            account: { connect: { id: args.accountId } },
+            category: { connect: { id: args.categoryId } },
+            amout: args.amout,
+            type: args.type,
+            date: args.date,
+            description: args.description,
+            tags: args.tags,
+            note: args.note,
+            user: { connect: { id: userId } }
+        }
+    }, info)
+}
+
 async function login(_, args, ctx, info) {
     const { email, password } = args;
 
@@ -64,6 +84,7 @@ async function signup(_, args, ctx, info) {
 module.exports = {
     createAccount,
     createCategory,
+    createRecord,
     signup,
     login
 }
