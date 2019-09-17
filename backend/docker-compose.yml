@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+  
   api: 
     build: .
     ports: 
@@ -11,6 +12,7 @@ services:
     command: npm run dev
     volumes: 
       - .:/usr/app
+
   prisma:
     image: prismagraphql/prisma:1.28
     restart: always
@@ -27,6 +29,7 @@ services:
             user: prisma
             password: prisma
             migrations: true
+
   postgres:
     image: postgres:10.3
     restart: always

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index",
-    "dev": "npx nodemon --delay 1000ms --ext js,graphql src/index"
+    "dev": "npx nodemon -L --delay 1000ms --ext js,graphql src/index"
   },
   "keywords": [],
   "author": "",
